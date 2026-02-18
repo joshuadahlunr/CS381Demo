@@ -77,7 +77,7 @@ GuiVolumeControlState InitGuiVolumeControl(void) {
     GuiVolumeControlState state = { 0 };
 
     // Init anchors
-    state.anchor01 = Vector2{ 24, 24 };            // ANCHOR ID:1
+    state.anchor01 = (Vector2){ 24, 24 };            // ANCHOR ID:1
     
     // Initilize controls variables
     state.SFXSliderValue = 0.0f;            // Slider: SFXSlider
@@ -108,17 +108,17 @@ void GuiVolumeControl(GuiVolumeControlState *state) {
     const char *PingButtonText = "Ping";    // BUTTON: PingButton
     
     // Draw controls
-    GuiGroupBox(Rectangle{ state->anchor01.x + 0, state->anchor01.y + 0, 256, 264 }, VolumeGroupText);
-    GuiGroupBox(Rectangle{ state->anchor01.x + 24, state->anchor01.y + 24, 208, 56 }, SFXGroupText);
-    GuiLabel(Rectangle{ 64, 64, 120, 24 }, TextFormat("%.0f%%", state->SFXSliderValue));
-    state->SFXSliderValue = GuiSlider(Rectangle{ state->anchor01.x + 72, state->anchor01.y + 40, 144, 24 }, SFXSliderText, NULL, state->SFXSliderValue, 0, 100);
-    GuiGroupBox(Rectangle{ state->anchor01.x + 24, state->anchor01.y + 104, 208, 56 }, MusicGroupText);
-    GuiLabel(Rectangle{ 64, 144, 120, 24 }, TextFormat("%.0f%%", state->MusicSliderValue));
-    state->MusicSliderValue = GuiSlider(Rectangle{ state->anchor01.x + 72, state->anchor01.y + 120, 144, 24 }, MusicSliderText, NULL, state->MusicSliderValue, 0, 100);
-    GuiGroupBox(Rectangle{ state->anchor01.x + 24, state->anchor01.y + 184, 208, 56 }, DialogueGroupText);
-    GuiLabel(Rectangle{ 64, 224, 120, 24 }, TextFormat("%.0f%%", state->DialogueSliderValue));
-    state->DialogueSliderValue = GuiSlider(Rectangle{ state->anchor01.x + 72, state->anchor01.y + 200, 144, 24 }, DialogueSliderText, NULL, state->DialogueSliderValue, 0, 100);
-    if (GuiButton(Rectangle{ 24, 304, 256, 24 }, PingButtonText)) PingButton(); 
+    GuiGroupBox((Rectangle){ state->anchor01.x + 0, state->anchor01.y + 0, 256, 264 }, VolumeGroupText);
+    GuiGroupBox((Rectangle){ state->anchor01.x + 24, state->anchor01.y + 24, 208, 56 }, SFXGroupText);
+    GuiLabel((Rectangle){ 64, 64, 120, 24 }, TextFormat("%.0f%%", state->SFXSliderValue));
+    state->SFXSliderValue = GuiSlider((Rectangle){ state->anchor01.x + 72, state->anchor01.y + 40, 144, 24 }, SFXSliderText, NULL, state->SFXSliderValue, 0, 100);
+    GuiGroupBox((Rectangle){ state->anchor01.x + 24, state->anchor01.y + 104, 208, 56 }, MusicGroupText);
+    GuiLabel((Rectangle){ 64, 144, 120, 24 }, TextFormat("%.0f%%", state->MusicSliderValue));
+    state->MusicSliderValue = GuiSlider((Rectangle){ state->anchor01.x + 72, state->anchor01.y + 120, 144, 24 }, MusicSliderText, NULL, state->MusicSliderValue, 0, 100);
+    GuiGroupBox((Rectangle){ state->anchor01.x + 24, state->anchor01.y + 184, 208, 56 }, DialogueGroupText);
+    GuiLabel((Rectangle){ 64, 224, 120, 24 }, TextFormat("%.0f%%", state->DialogueSliderValue));
+    state->DialogueSliderValue = GuiSlider((Rectangle){ state->anchor01.x + 72, state->anchor01.y + 200, 144, 24 }, DialogueSliderText, NULL, state->DialogueSliderValue, 0, 100);
+    if (GuiButton((Rectangle){ 24, 304, 256, 24 }, PingButtonText)) PingButton(); 
 }
 
 #endif // GUI_VOLUMECONTROL_IMPLEMENTATION
