@@ -8,7 +8,7 @@ add_subdirectory(../raylib-cpp raylib)
 include(../assets/includeable.cmake)
 
 add_executable(as5 as5.cpp skybox.cpp)
-target_link_libraries(as5 raylib raylib_cpp raygui)
+target_link_libraries(as5 raylib raylib_cpp raygui raylib::buffered)
 
 make_includeable(../assets/shaders/skybox.vs generated/skybox.vs)
 make_includeable(../assets/shaders/skybox.fs generated/skybox.fs)

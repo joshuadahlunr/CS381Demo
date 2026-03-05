@@ -16,8 +16,56 @@
 #include <memory>
 #include <vector>
 
+#include <BufferedRaylib.hpp>
+
 #define SKYBOX_IMPLEMENTATION
 #include "skybox.hpp"
+
+
+// struct StateMachine {
+//     enum State {
+//         Idle,
+//         Move,
+//         Jump,
+//         Fall,
+//     } state = Idle;
+
+//     void update() {
+//         switch(state) {
+//         break; case Idle:
+//             input();
+//         break; case Move:
+//             // if(left_pressed) move left
+//             // if(right_pressed) move right
+//             input();
+//         break; case Jump:
+//             input();
+//         break; case Fall:
+//             // if(left_pressed) move left
+//             // if(right_pressed) move right
+//             input();
+//         }
+//     }
+//     void input() {
+//         switch (state) {
+//         break; case Idle:
+//             animation_player.playing != "land";
+//             if(left_pressed) state = Move;
+//             if(right_pressed) state = Move;
+//             if(space_pressed) state = Jump;
+//         break; case Move:
+//             if(!left_pressed && !right_pressed) state = Idle;
+//             if(space_pressed) state = Jump;
+//         break; case Jump:
+//             if(jump_animation_finished) state = Fall;
+//         break; case Fall:
+//             if(on_ground) {
+//                 state = Idle;
+//                 animation_player.play("land");
+//             }
+//         }
+//     }
+// };
 
 class Component {
 public:
@@ -118,6 +166,20 @@ int main() {
 
     cs381::SkyBox skybox("textures/skybox.png");
 
+    raylib::BufferedInput input;
+    input["jump"] = raylib::Action::key(KEY_SPACE).AddPressedCallback([]() {
+        std::cout << "Pressed" << std::endl;
+    }).move();
+
+    input["jump"] = raylib::Action::key(KEY_P);
+
+    input["move"] = raylib::Action::button_axis(
+        {raylib::Button::key(KEY_W), raylib::Button::key(KEY_UP)},
+        {raylib::Button::key(KEY_S), raylib::Button::key(KEY_DOWN)}
+    ).AddCallback([](float value, float change) {
+        std::cout << "Move: " << value << " - " << change << std::endl;
+    }).move();
+
     // Add things to entity.
     std::vector<Entity> entities;
     auto& e = entities.emplace_back();
@@ -134,6 +196,11 @@ int main() {
     }
        
     while(!window.ShouldClose()) {
+        input.PollEvents();
+
+        // auto state = input["move"].data.vector.last_state;
+        // std::cout << state.x << ", " << state.y << std::endl;
+
         window.BeginDrawing(); {
             window.ClearBackground(raylib::Color::RayWhite());
             float dt = window.GetFrameTime();
