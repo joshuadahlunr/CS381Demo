@@ -67,6 +67,37 @@
 //     }
 // };
 
+class State {
+public:
+
+    void transition(State* current_state, State* new_state) {
+        current_state->TransitionOut();
+        delete current_state;
+        current_state = new_state;
+        current_state->TransitionIn();
+    }
+
+    virtual void TransitionIn();
+    virtual void TransitionOut();
+    virtual void Update(State* current_state);
+    virtual void Input(State* current_state);
+
+};
+
+struct IdleState : public State {
+    void Update(State* current_state) override {
+        Input(current_state);
+    }
+    void Input(State* current_state) override {
+        animation_player.playing != "land";
+        if(left_pressed) transition(current_state, new MoveState());
+        if(right_pressed) transition(current_state, new MoveState());
+        if(space_pressed) transition(current_state, new JumpState());
+    }
+}
+
+
+
 class Component {
 public:
     struct Entity* attached;
