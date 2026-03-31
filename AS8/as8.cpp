@@ -18,6 +18,52 @@
 #define SKYBOX_IMPLEMENTATION
 #include "skybox.hpp"
 
+#include <iostream>
+
+//#include "glaze/glaze.hpp"
+
+// constexpr static size_t my_struct_type = 0;
+
+// struct my_struct {
+//     size_t type = my_struct_type;
+//     int i = 287;
+//     std::string hello = "Hello World";
+//     std::array<uint64_t, 3> arr = {1, 2, 3};
+//     std::map<std::string, int> map{{"one", 1}, {"two", 2}};
+// };
+
+// constexpr static size_t update_position_type = 1;
+
+// struct update_position {
+//     size_t type = update_position_type;
+//     float x, y, z;
+// };
+// struct type_of {
+//     size_t type;
+// };
+
+// int main() {
+//     update_position obj{};
+//     std::string json = glz::write_json(obj).value_or("error");
+//     std::cout << json << '\n';
+
+//     // Send over network
+
+//     type_of type;
+//     auto error = glz::read<glz::opts{.error_on_unknown_keys=false}>(type, json);
+//     if(!error) {
+//         if(type.type == update_position_type) {
+//             auto value = glz::read_json<update_position>(json);
+//             if(value.has_value()) {
+//                 // value.error()
+//                 // value.value()
+//             }
+//         }
+//     }
+//     return 0;
+// }
+
+
 extern size_t globalComponentCounter;
 template<typename T>
 size_t GetComponentID(/* T reference = {} */) {
@@ -162,6 +208,19 @@ int main() {
     // std::vector<Entity> entities;
     // auto& e = entities.emplace_back();
 
+    // raylib::Quaternion::Identity()
+    auto q = raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
+    // raylib::Quaternion::FromAxisAngle(const ::Vector3 &axis, const Radian angle)
+
+    raylib::Quaternion targetRotation;
+    targetRotation = targetRotation * raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
+
+
+
+    raylib::Quaternion rotation;
+    rotation = rotation.Slerp(targetRotation, angluarAcceleration * dt); 
+
+    raylib::Vector3::Forward().RotateByQuaternion(rotation);
 
     const float acceleration = 10;
     
