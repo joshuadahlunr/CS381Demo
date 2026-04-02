@@ -9,6 +9,7 @@
 #include "raylib-cpp.hpp"
 #include "raylib.h"
 #include <concepts>
+#include <execution>
 #include <iostream>
 #include <limits>
 #include <optional>
@@ -163,14 +164,6 @@ struct Context {
     }
 };
 
-void Draw(Context& ctx) {
-    for(entity e = 0; e < ctx.entityMasks.size(); ++e) {
-        if(!ctx.HasComponent<DrawInfo>(e)) continue;
-
-        // Draw or something
-    }
-}
-
 // struct Entities {
 //     enum Type {
 //         Penguin = 0,
@@ -188,6 +181,49 @@ void Draw(Context& ctx) {
 //     std::vector<raylib::Degree> heading;
 //     std::vector<float> speed, target_speed;
 // };
+
+struct ModelComponent {
+    raylib::Model* model;
+};
+
+struct PositionComponent {
+    raylib::Vector3 position;
+};
+
+void DrawModelFunction(Context& ctx, entity e) {
+    if(!ctx.HasComponent<ModelComponent>(e)) return;
+    if(!ctx.HasComponent<PositionComponent>(e)) return;
+
+    auto model = ctx.GetComponent<ModelComponent>(e);
+    auto position = ctx.GetComponent<PositionComponent>(e);
+    model.model->Draw(position.position);
+}
+
+auto sequential(auto func) {
+    return [func](Context& ctx) {
+        // Bulk process
+        for(entity e = 0; e < ctx.entityMasks.size(); ++e) {
+            func(ctx, e);
+        }
+    };
+}
+
+auto parallel(auto func) {
+    return [func](Context& ctx) {
+        std::vector<entity> entities(ctx.entityMasks.size());
+        std::iota(entities.begin(), entities.end(), 0);
+        std::for_each(std::execution::par_unseq, entities.begin(), entities.end(), [func, &ctx](entity e){
+            func(ctx, e);
+        });
+    };
+}
+
+template<std::invocable<Context&>... Tsystems>
+auto sequential(Tsystems... systems) {
+    return [=](Context& ctx) {
+        (systems(ctx), ...);
+    };
+}
 
 int main() {
     raylib::Window window(800, 600, "As0");
@@ -208,68 +244,40 @@ int main() {
     // std::vector<Entity> entities;
     // auto& e = entities.emplace_back();
 
-    // raylib::Quaternion::Identity()
-    auto q = raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
-    // raylib::Quaternion::FromAxisAngle(const ::Vector3 &axis, const Radian angle)
+    // // raylib::Quaternion::Identity()
+    // auto q = raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
+    // // raylib::Quaternion::FromAxisAngle(const ::Vector3 &axis, const Radian angle)
 
-    raylib::Quaternion targetRotation;
-    targetRotation = targetRotation * raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
+    // raylib::Quaternion targetRotation;
+    // targetRotation = targetRotation * raylib::Quaternion::FromEuler(raylib::Degree(45).RadianValue(), 0, 0);
 
+    // raylib::Quaternion rotation;
+    // rotation = rotation.Slerp(targetRotation, angluarAcceleration * dt); 
 
-
-    raylib::Quaternion rotation;
-    rotation = rotation.Slerp(targetRotation, angluarAcceleration * dt); 
-
-    raylib::Vector3::Forward().RotateByQuaternion(rotation);
+    // raylib::Vector3::Forward().RotateByQuaternion(rotation);
 
     const float acceleration = 10;
     
+    Context ctx;
+    auto e = ctx.CreateEntity();
+    ctx.AddComponent<ModelComponent>(e).model = &penguin;
+    ctx.AddComponent<PositionComponent>(e).position = raylib::Vector3{0, 0, 0};
        
+    auto schedule = sequential(
+        parallel(DrawModelFunction),
+        parallel(DrawModelFunction)
+    );
+
     while(!window.ShouldClose()) {
         window.BeginDrawing(); {
             window.ClearBackground(raylib::Color::RayWhite());
             float dt = window.GetFrameTime();
-
-            // for(auto& e: entities) {
-
-            //     if(raylib::Keyboard::IsKeyPressed(KEY_W))
-            //         e.target_speed += 50;
-            //     if(raylib::Keyboard::IsKeyPressed(KEY_S))
-            //         e.target_speed -= 50;
-            //     if(raylib::Keyboard::IsKeyPressed(KEY_SPACE))
-            //         e.target_speed = 0;
-
-            //     if(e.speed < e.target_speed) e.speed += acceleration * dt;
-            //     else if(e.speed > e.target_speed) e.speed -= acceleration * dt;
-
-            //     e.velocity = raylib::Vector3{cos(e.heading.RadianValue()), 0, sin(e.heading.RadianValue())} * e.speed;
-            //     e.position += e.velocity * dt;
-
-            // }
-            // timer -= dt;
-
-            // bool w_down = raylib::Keyboard::IsKeyDown(KEY_W);
-            // if(w_down && timer < 0) {
-            //     velocity += {10, 0, 0};
-            //     timer = 3;
-            // }
         
             camera.BeginMode(); {
                 skybox.Draw();
                 ground.Draw({});
 
-                // for(auto& e: entities) {
-                //     // -> continue
-                //     if(e.type != Entity::Camera)
-                //         continue;
-
-                //     DrawBoundedModel(penguin, [&e](raylib::Transform& transform){
-                //         return transform.Translate(e.position);
-                //     });
-                    
-                // }
-
-                // -> break;
+                schedule(ctx);
 
             } camera.EndMode();
             
