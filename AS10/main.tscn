@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://d4buqk88x3ql0"]
+
+[ext_resource type="Script" uid="uid://7ajjj316pjoi" path="res://networking.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dnvliqo3t1bxv" path="res://RemoteLabel.gd" id="2_0xm2m"]
+
+[sub_resource type="Theme" id="Theme_ig7tw"]
+Button/font_sizes/font_size = 16
+
+[node name="Game" type="Control" unique_id=794678782]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ig7tw")
+
+[node name="Menu" type="Control" parent="." unique_id=1959824734]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Menu" unique_id=471049024]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 369.0
+offset_top = 177.0
+offset_right = 743.0
+offset_bottom = 431.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/PanelContainer" unique_id=227925844]
+layout_mode = 2
+alignment = 1
+
+[node name="Host" type="Button" parent="Menu/PanelContainer/VBoxContainer" unique_id=2143801301]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Host Server"
+
+[node name="IP" type="LineEdit" parent="Menu/PanelContainer/VBoxContainer" unique_id=558135617]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "localhost"
+alignment = 1
+
+[node name="Join" type="Button" parent="Menu/PanelContainer/VBoxContainer" unique_id=1884500634]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Join"
+
+[node name="Label" type="Control" parent="." unique_id=1335755590]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Label" unique_id=664493434]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.5
+offset_top = -20.0
+offset_right = 44.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Increment" type="Button" parent="Label/HBoxContainer" unique_id=506552396]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Increment"
+
+[node name="Label" type="Label" parent="Label/HBoxContainer" unique_id=1759985745]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Value: 99999"
+script = ExtResource("2_0xm2m")
+
+[node name="Decrement" type="Button" parent="Label/HBoxContainer" unique_id=92386548]
+layout_mode = 2
+theme = SubResource("Theme_ig7tw")
+theme_override_font_sizes/font_size = 48
+text = "Decrement"
+
+[node name="PlayerIDs" type="VBoxContainer" parent="Label" unique_id=2139316255]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -435.5
+offset_top = 58.0
+offset_right = 435.5
+offset_bottom = 263.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1932363697]
+_spawnable_scenes = PackedStringArray("uid://b05gwe3glxqoq")
+spawn_path = NodePath("../Label/PlayerIDs")
+
+[connection signal="pressed" from="Menu/PanelContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Menu/PanelContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]

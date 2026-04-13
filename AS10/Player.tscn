@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b05gwe3glxqoq"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0rwas"]
+
+[node name="Label2" type="Label" unique_id=1499537552]
+text = "Player X"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1837890782]
+replication_config = SubResource("SceneReplicationConfig_0rwas")
