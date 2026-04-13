@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://b5drumbprcqtl"]
+
+[ext_resource type="PackedScene" uid="uid://p1nnw3pgcmcb" path="res://Box.tscn" id="1_64soo"]
+[ext_resource type="Texture2D" uid="uid://c2ahcfj6gm6qy" path="res://icon.svg" id="2_64soo"]
+[ext_resource type="Script" uid="uid://c62430yj1ni4j" path="res://TurnSelfOff.gd" id="3_umdxf"]
+[ext_resource type="Script" uid="uid://dph4tkfmbj1cx" path="res://PrintValue.gd" id="4_0miaj"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_64soo"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_umdxf"]
+sky_material = SubResource("ProceduralSkyMaterial_64soo")
+
+[sub_resource type="Environment" id="Environment_0miaj"]
+background_mode = 2
+sky = SubResource("Sky_umdxf")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64soo"]
+bg_color = Color(0.8839967, 0.48066372, 0, 1)
+
+[node name="Node3D" type="Node3D" unique_id=1634916674]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577819323]
+environment = SubResource("Environment_0miaj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1883864653]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=58587958]
+
+[node name="Node3D" parent="RigidBody3D" unique_id=719621632 instance=ExtResource("1_64soo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="Node3D2" parent="." unique_id=1329179931 instance=ExtResource("1_64soo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=189586961]
+position = Vector2(303, 192)
+texture = ExtResource("2_64soo")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=191201037]
+transform = Transform3D(0.96432215, 0, 0.26473153, 0, 1, 0, -0.26473153, 0, 0.96432215, 0, 0, 2.3661194)
+
+[node name="VBoxContainer" type="Panel" parent="." unique_id=838244545]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 183.0
+offset_top = 117.0
+offset_right = -155.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_64soo")
+
+[node name="VBoxContainer" type="VSplitContainer" parent="VBoxContainer" unique_id=315353247]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+split_offsets = PackedInt32Array(-68, -100)
+split_offset = -68
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=874757508]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 72
+text = "Start"
+script = ExtResource("3_umdxf")
+
+[node name="Button2" type="Button" parent="VBoxContainer/VBoxContainer" unique_id=1750209123]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 72
+text = "Continue"
+script = ExtResource("3_umdxf")
+
+[node name="Slider" type="VSlider" parent="VBoxContainer/VBoxContainer" unique_id=951205394 node_paths=PackedStringArray("slider")]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+script = ExtResource("4_0miaj")
+slider = NodePath(".")
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button" to="VBoxContainer/VBoxContainer/Button" method="on_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/Button2" to="VBoxContainer/VBoxContainer/Button2" method="on_pressed"]
+[connection signal="value_changed" from="VBoxContainer/VBoxContainer/Slider" to="VBoxContainer/VBoxContainer/Slider" method="_on_value_changed"]
+
+[editable path="RigidBody3D/Node3D"]

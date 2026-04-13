@@ -10,6 +10,9 @@ include(../assets/includeable.cmake)
 add_executable(as8 as8.cpp skybox.cpp componentCounter.cpp)
 target_link_libraries(as8 raylib raylib_cpp raygui)
 
+find_package(TBB REQUIRED)
+target_link_libraries(as8 PUBLIC TBB::tbb)
+
 make_includeable(../assets/shaders/skybox.vs generated/skybox.vs)
 make_includeable(../assets/shaders/skybox.fs generated/skybox.fs)
 make_includeable(../assets/shaders/cubemap.vs generated/cubemap.vs)
